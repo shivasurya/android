@@ -14,7 +14,7 @@ import java.net.URL;
  * Created by S.Shivasurya on 11/28/2015 - androidStudio.
  */
 public class NetworkConnection extends AsyncTask<String, Void, String> {
-    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
     HttpURLConnection urlConnection = null;
     BufferedReader reader = null;
     String MovieDBjson = null;
@@ -22,8 +22,8 @@ public class NetworkConnection extends AsyncTask<String, Void, String> {
     @Override
     protected String doInBackground(String... params) {
         try {
-
-            URL url = new URL("http://api.themoviedb.org/3/discover/movie?sort_by=popularity.desc&api_key=" + ACCESS_TOKEN);
+            String sort = params[0];
+            URL url = new URL("http://api.themoviedb.org/3/discover/movie?sort_by=" + sort + "&api_key=" + ACCESS_TOKEN);
 
             urlConnection = (HttpURLConnection) url.openConnection();
             urlConnection.setRequestMethod("GET");

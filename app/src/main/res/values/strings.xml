@@ -7,4 +7,7 @@
     <string name="build">Build It Bigger</string>
     <string name="xyz">XYZ Reader</string>
     <string name="capstone">CAPSTONE:My Own App</string>
+    <string name="menu">sort</string>
+    <string name="title_activity_movie_detail">MovieDetailActivity</string>
+    <string name="share_using">share using</string>
 </resources>
