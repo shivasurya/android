@@ -14,7 +14,7 @@ import java.net.URL;
  * Created by S.Shivasurya on 11/28/2015 - androidStudio.
  */
 public class NetworkConnection extends AsyncTask<String, Void, String> {
-    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
     HttpURLConnection urlConnection = null;
     BufferedReader reader = null;
     String MovieDBjson = null;
