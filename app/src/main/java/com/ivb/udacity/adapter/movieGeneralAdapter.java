@@ -1,6 +1,9 @@
 package com.ivb.udacity.adapter;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +11,8 @@ import android.view.ViewGroup;
 
 import com.ivb.udacity.R;
 import com.ivb.udacity.modal.movieGeneralModal;
+import com.ivb.udacity.movieDetailActivity;
+import com.ivb.udacity.movieDetailFragment;
 import com.squareup.picasso.Picasso;
 
 import java.util.List;
@@ -18,10 +23,12 @@ import java.util.List;
 public class movieGeneralAdapter extends RecyclerView.Adapter<movieGeneralHolder> {
     private List<movieGeneralModal> mMovieGeneralModal;
     private Context context;
+    private boolean mTwoPane;
 
-    public movieGeneralAdapter(Context context, List<movieGeneralModal> itemList) {
+    public movieGeneralAdapter(Context context, List<movieGeneralModal> itemList, boolean mTwoPane) {
         this.mMovieGeneralModal = itemList;
         this.context = context;
+        this.mTwoPane = mTwoPane;
     }
 
     @Override
@@ -39,6 +46,25 @@ public class movieGeneralAdapter extends RecyclerView.Adapter<movieGeneralHolder
         Picasso.with(context)
                 .load(mMovieGeneralModal.get(position).getThumbnail())
                 .into(holder.moviePhoto);
+        holder.mView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mTwoPane) {
+                    Bundle arguments = new Bundle();
+                    arguments.putString(movieDetailFragment.ARG_ITEM_ID, "1");
+                    movieDetailFragment fragment = new movieDetailFragment();
+                    fragment.setArguments(arguments);
+                    ((Activity) context).getFragmentManager().beginTransaction()
+                            .replace(R.id.movie_detail_container, fragment)
+                            .commit();
+                } else {
+                    Context context = v.getContext();
+                    Intent intent = new Intent(context, movieDetailActivity.class);
+                    intent.putExtra(movieDetailFragment.ARG_ITEM_ID, "1");
+                    context.startActivity(intent);
+                }
+            }
+        });
     }
 
     @Override

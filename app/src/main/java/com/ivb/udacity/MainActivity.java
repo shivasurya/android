@@ -12,7 +12,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 
-import com.ivb.udacity.adapter.movieGeneralAdapter;
 import com.ivb.udacity.modal.Results;
 import com.ivb.udacity.modal.movieGeneral;
 import com.ivb.udacity.modal.movieGeneralModal;
@@ -133,8 +132,8 @@ public class MainActivity extends AppCompatActivity {
                 rView.setHasFixedSize(true);
                 rView.setLayoutManager(lLayout);
 
-                movieGeneralAdapter mMovieGeneralAdapter = new movieGeneralAdapter(MainActivity.this, movieGeneralModals);
-                rView.setAdapter(mMovieGeneralAdapter);
+                //    movieGeneralAdapter mMovieGeneralAdapter = new movieGeneralAdapter(MainActivity.this, movieGeneralModals);
+                //  rView.setAdapter(mMovieGeneralAdapter);
 
             }
 

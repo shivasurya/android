@@ -10,4 +10,6 @@
     <string name="menu">sort</string>
     <string name="title_activity_movie_detail">MovieDetailActivity</string>
     <string name="share_using">share using</string>
+    <string name="title_movie_list">movies</string>
+    <string name="title_movie_detail">movie Detail</string>
 </resources>

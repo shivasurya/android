@@ -15,10 +15,12 @@ public class movieGeneralHolder extends RecyclerView.ViewHolder implements View.
 
     public TextView movieName, movieAvg;
     public ImageView moviePhoto;
+    public View mView;
 
     public movieGeneralHolder(View itemView) {
         super(itemView);
         itemView.setOnClickListener(this);
+        mView = itemView;
         movieName = (TextView) itemView.findViewById(R.id.movieName);
         movieAvg = (TextView) itemView.findViewById(R.id.vote);
         moviePhoto = (ImageView) itemView.findViewById(R.id.moviePhoto);
