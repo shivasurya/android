@@ -1,156 +1,78 @@
 package com.ivb.udacity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v7.app.AlertDialog;
+import android.support.design.widget.Snackbar;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
-import android.widget.TextView;
 
-import com.squareup.picasso.Picasso;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-public class MovieDetailActivity extends AppCompatActivity {
-    private final String TITLE = "title";
-    private final String RELEASE_DATE = "release_date";
-    private final String MOVIE_POSTER = "poster_path";
-    private final String VOTE_AVERAGE = "vote_average";
-    private final String PLOT_SYNOPSIS = "overview";
-    private TextView plotView, voteAvg, releaseDate, Title;
-    private ImageView imageView;
-    private CollapsingToolbarLayout collapsingToolbarLayout;
-    private String title, release, poster, vote, plot;
-
+/**
+ * An activity representing a single movie detail screen. This
+ * activity is only used narrow width devices. On tablet-size devices,
+ * item details are presented side-by-side with a list of items
+ * in a {@link movieListActivity}.
+ */
+public class movieDetailActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_detail);
-        plotView = (TextView) findViewById(R.id.plot);
-        voteAvg = (TextView) findViewById(R.id.voteAvg);
-        releaseDate = (TextView) findViewById(R.id.releaseDate);
-        Title = (TextView) findViewById(R.id.titlemain);
-        imageView = (ImageView) findViewById(R.id.headerimage);
 
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        setSupportActionBar(toolbar);
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                shareMessage();
+                Snackbar.make(view, "Replace with your own detail action", Snackbar.LENGTH_LONG)
+                        .setAction("Action", null).show();
             }
         });
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        collapsingToolbarLayout = (CollapsingToolbarLayout) findViewById(R.id.collapseBar);
-        if (uiUpdate()) {
-            Log.d("success", "success in updating UI");
-        } else
-            showErrorDialog();
-    }
 
-    private void showErrorDialog() {
-        new AlertDialog.Builder(MovieDetailActivity.this)
-                .setCancelable(true)
-                .setMessage("Sorry Something Went Wrong.Try again Later!")
-                .setNegativeButton("Okay", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        finish();
-                    }
-                }).show();
-    }
-
-    private boolean uiUpdate() {
-
-        Intent intent = getIntent();
-        Bundle extras = intent.getExtras();
-        if (extras != null) {
-            if (extras.containsKey(TITLE) && extras.containsKey(RELEASE_DATE) && extras.containsKey(MOVIE_POSTER) && extras.containsKey(VOTE_AVERAGE) && extras.containsKey(PLOT_SYNOPSIS)) {
-                title = intent.getStringExtra(TITLE);
-                release = intent.getStringExtra(RELEASE_DATE);
-                poster = intent.getStringExtra(MOVIE_POSTER);
-                vote = intent.getStringExtra(VOTE_AVERAGE);
-                plot = intent.getStringExtra(PLOT_SYNOPSIS);
-                poster = "http://image.tmdb.org/t/p/w500/" + poster;
-            } else
-                return false;
-        } else
-            return false;
-        collapsingToolbarLayout.setTitle(title);
-        plotView.setText(plot);
-        SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd");
-        Date date = null;
-        try {
-            date = format.parse(release);
-        } catch (ParseException e) {
-            e.printStackTrace();
+        // Show the Up button in the action bar.
+        ActionBar actionBar = getSupportActionBar();
+        if (actionBar != null) {
+            actionBar.setDisplayHomeAsUpEnabled(true);
         }
-        DateFormat df = new SimpleDateFormat("MMM dd, yyyy");
-        releaseDate.setText(df.format(date).toString());
-        Title.setText(title);
-        voteAvg.setText(vote.toString());
-        Picasso.with(this)
-                .load(poster)
-                .into(imageView);
-        return true;
-    }
 
-
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        if (title != null && release != null && plot != null && vote != null && poster != null) {
-            outState.putString(TITLE, title);
-            outState.putString(RELEASE_DATE, release);
-            outState.putString(PLOT_SYNOPSIS, plot);
-            outState.putString(VOTE_AVERAGE, vote);
-            outState.putString(MOVIE_POSTER, poster);
+        // savedInstanceState is non-null when there is fragment state
+        // saved from previous configurations of this activity
+        // (e.g. when rotating the screen from portrait to landscape).
+        // In this case, the fragment will automatically be re-added
+        // to its container so we don't need to manually add it.
+        // For more information, see the Fragments API guide at:
+        //
+        // http://developer.android.com/guide/components/fragments.html
+        //
+        if (savedInstanceState == null) {
+            // Create the detail fragment and add it to the activity
+            // using a fragment transaction.
+            Bundle arguments = new Bundle();
+            arguments.putString(movieDetailFragment.ARG_ITEM_ID,
+                    getIntent().getStringExtra(movieDetailFragment.ARG_ITEM_ID));
+            movieDetailFragment fragment = new movieDetailFragment();
+            fragment.setArguments(arguments);
+            getFragmentManager().beginTransaction()
+                    .add(R.id.movie_detail_container, fragment)
+                    .commit();
         }
     }
 
-    private void shareMessage() {
-        String shareBody = title + " " + plot + " " + "check out Movie Popular App!";
-        Intent sharingIntent = new Intent(android.content.Intent.ACTION_SEND);
-        sharingIntent.setType("text/plain");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Movie App - shivasurya");
-        sharingIntent.putExtra(android.content.Intent.EXTRA_TEXT, shareBody);
-        startActivity(Intent.createChooser(sharingIntent, getResources().getString(R.string.share_using)));
-    }
-
     @Override
-    protected void onDestroy() {
-        super.onDestroy();
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == android.R.id.home) {
+            // This ID represents the Home or Up button. In the case of this
+            // activity, the Up button is shown. For
+            // more details, see the Navigation pattern on Android Design:
+            //
+            // http://developer.android.com/design/patterns/navigation.html#up-vs-back
+            //
+            navigateUpTo(new Intent(this, movieListActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

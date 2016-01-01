@@ -38,7 +38,7 @@ public class movieListActivity extends AppCompatActivity {
     final CharSequence[] items = {" Most Popular ", " Highest Rated ", " My Favourites "};
     private final String MOST_POPULAR = "popularity.desc";
     private final String HIGHLY_RATED = "vote_count.desc";
-    private final String ACCESS_TOKEN = "0a585d631bed6abcb1e16d13b3da675b";
+    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx";
     private AlertDialog choice;
     private String FLAG_CURRENT = MOST_POPULAR;
 
