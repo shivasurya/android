@@ -1,51 +1,44 @@
 package com.ivb.udacity;
 
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
-import android.view.View;
-import android.widget.AdapterView;
-import android.widget.GridView;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import com.ivb.udacity.adapter.movieGeneralAdapter;
+import com.ivb.udacity.modal.Results;
+import com.ivb.udacity.modal.movieGeneral;
+import com.ivb.udacity.modal.movieGeneralModal;
+import com.ivb.udacity.network.MovieAPI;
+import com.ivb.udacity.network.NetworkAPI;
 
-import java.util.concurrent.ExecutionException;
+import java.util.ArrayList;
+import java.util.List;
+
+import retrofit.Callback;
+import retrofit.RetrofitError;
+import retrofit.client.Response;
 
 public class MainActivity extends AppCompatActivity {
-    final CharSequence[] items = {" Most Popular ", " Highest Rated "};
+    final CharSequence[] items = {" Most Popular ", " Highest Rated ", " My Favourites "};
     private final String MOST_POPULAR = "popularity.desc";
     private final String HIGHLY_RATED = "vote_count.desc";
-    private final String TITLE = "title";
-    private final String RELEASE_DATE = "release_date";
-    private final String MOVIE_POSTER = "poster_path";
-    private final String VOTE_AVERAGE = "vote_average";
-    private final String PLOT_SYNOPSIS = "overview";
-    private GridView gridView;
-    private String resultJSON = null;
-    private String[] imgUrl = new String[20];
+    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
     private AlertDialog choice;
     private String FLAG_CURRENT = MOST_POPULAR;
-    private JSONArray movieDetails;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         updateView(FLAG_CURRENT);
-        if (savedInstanceState != null) {
-            int temp = savedInstanceState.getInt("GRIDVIEWPOSITION");
-            Log.d("temp", String.valueOf(temp));
-            gridView.setSelection(temp);
-        }
     }
 
     @Override
@@ -56,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        updateView(FLAG_CURRENT);
+        //  updateView(FLAG_CURRENT);
     }
 
     @Override
@@ -67,7 +60,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-        updateView(FLAG_CURRENT);
+        //    updateView(FLAG_CURRENT);
     }
 
     @Override
@@ -113,99 +106,45 @@ public class MainActivity extends AppCompatActivity {
 
     private void updateView(String type) {
         FLAG_CURRENT = type;
-        if (FetchMovie()) {
-            gridView = (GridView) findViewById(R.id.movie_grid);
-            gridView.setAdapter(new ImageAdapter(this, imgUrl));
-            gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        FetchMovie();
+    }
 
-                    try {
-                        JSONObject object = movieDetails.getJSONObject(position);
-                        String title = object.getString(TITLE);
-                        String poster = "" + object.getString(MOVIE_POSTER);
-                        String release_date = object.getString(RELEASE_DATE);
-                        String vote = object.getString(VOTE_AVERAGE);
-                        String plot = object.getString(PLOT_SYNOPSIS);
 
-                        Intent intent = new Intent(getApplicationContext(), MovieDetailActivity.class);
-                        intent.putExtra(TITLE, title);
-                        intent.putExtra(MOVIE_POSTER, poster);
-                        intent.putExtra(RELEASE_DATE, release_date);
-                        intent.putExtra(VOTE_AVERAGE, vote);
-                        intent.putExtra(PLOT_SYNOPSIS, plot);
-
-                        startActivity(intent);
-
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                        showErrorDialog();
-                    }
-
+    private void FetchMovie() {
+        MovieAPI mMovieAPI = NetworkAPI.createService(MovieAPI.class);
+        mMovieAPI.fetchMovies(FLAG_CURRENT, ACCESS_TOKEN, new Callback<movieGeneral>() {
+            @Override
+            public void success(movieGeneral mMoviegeneral, Response response) {
+                // here you do stuff with returned tasks
+                List<movieGeneralModal> movieGeneralModals = new ArrayList<movieGeneralModal>();
+                Results[] mResult = mMoviegeneral.getResults();
+                for (Results result : mResult) {
+                    movieGeneralModal obj = new movieGeneralModal(result.getTitle(), result.getPoster_path(), result.getVote_average());
+                    movieGeneralModals.add(obj);
                 }
-            });
-        } else {
-            showErrorDialog();
-        }
-    }
+                DisplayMetrics displaymetrics = new DisplayMetrics();
+                getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+                int width = displaymetrics.widthPixels;
+                int number = width / 170;
 
-    private void showErrorDialog() {
-        new AlertDialog.Builder(MainActivity.this)
-                .setCancelable(true)
-                .setMessage("Sorry Something Went Wrong.Try again Later!")
-                .setPositiveButton("Retry", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                GridLayoutManager lLayout = new GridLayoutManager(MainActivity.this, number);
 
-                    }
-                })
-                .setNegativeButton("Okay", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                RecyclerView rView = (RecyclerView) findViewById(R.id.recyclerview);
+                rView.setHasFixedSize(true);
+                rView.setLayoutManager(lLayout);
 
-                    }
-                }).show();
-    }
+                movieGeneralAdapter mMovieGeneralAdapter = new movieGeneralAdapter(MainActivity.this, movieGeneralModals);
+                rView.setAdapter(mMovieGeneralAdapter);
 
-    @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        super.onRestoreInstanceState(savedInstanceState);
-        int position = savedInstanceState.getInt("GRIDVIEWPOSITION");
-        gridView.setSelection(position);
-    }
+            }
 
-    @Override
-    public void onSaveInstanceState(Bundle outState, PersistableBundle outPersistentState) {
-        super.onSaveInstanceState(outState, outPersistentState);
-        int position = gridView.getFirstVisiblePosition();
-        Log.d("append", String.valueOf(position));
-        outState.putInt("GRIDVIEWPOSITION", position);
-    }
+            @Override
+            public void failure(RetrofitError error) {
+                // you should handle errors, too
+                Log.d("error", error.getMessage());
+            }
+        });
 
-    private boolean FetchMovie() {
-        NetworkConnection networkConnection = new NetworkConnection();
-        try {
-            resultJSON = networkConnection.execute(FLAG_CURRENT).get();
-            if (resultJSON != null) {
-                JSONObject movie = new JSONObject(resultJSON);
-                movieDetails = movie.getJSONArray("results");
-                for (int i = 0; i < movieDetails.length(); i++) {
-                    JSONObject temp_mov = movieDetails.getJSONObject(i);
-                    imgUrl[i] = "http://image.tmdb.org/t/p/w185/" + temp_mov.getString("poster_path");
-                }
-                return true;
-            } else
-                return false;
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-            return false;
-        } catch (ExecutionException e) {
-            e.printStackTrace();
-            return false;
-        } catch (JSONException e) {
-            e.printStackTrace();
-            return false;
-        }
 
     }
 }
