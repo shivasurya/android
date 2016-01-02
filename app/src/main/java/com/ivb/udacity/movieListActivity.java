@@ -1,9 +1,11 @@
 package com.ivb.udacity;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
@@ -38,7 +40,7 @@ public class movieListActivity extends AppCompatActivity {
     final CharSequence[] items = {" Most Popular ", " Highest Rated ", " My Favourites "};
     private final String MOST_POPULAR = "popularity.desc";
     private final String HIGHLY_RATED = "vote_count.desc";
-    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXx";
+    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
     private AlertDialog choice;
     private String FLAG_CURRENT = MOST_POPULAR;
 
@@ -52,7 +54,7 @@ public class movieListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
-
+        Log.d("oncreate", "oncreate");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -71,13 +73,28 @@ public class movieListActivity extends AppCompatActivity {
             //this is two pane mode
             mTwoPane = true;
         }
+
+        Log.i("check", String.valueOf(mTwoPane));
         FetchMovie((RecyclerView) recyclerView);
 
     }
 
+    protected void getPaneChanges() {
+        //this is two pane mode
+        mTwoPane = findViewById(R.id.movie_detail_container) != null;
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        getPaneChanges();
+        Log.i("config", "changed");
+    }
+
     private void FetchMovie(@NonNull final RecyclerView recyclerView) {
+        Log.i("log", String.valueOf(mTwoPane));
         MovieAPI mMovieAPI = NetworkAPI.createService(MovieAPI.class);
-        mMovieAPI.fetchMovies(FLAG_CURRENT, ACCESS_TOKEN, new Callback<movieGeneral>() {
+        mMovieAPI.fetchMovies(FLAG_CURRENT, ACCESS_TOKEN, "ta", new Callback<movieGeneral>() {
             @Override
             public void success(movieGeneral mMoviegeneral, Response response) {
                 // here you do stuff with returned tasks
@@ -101,10 +118,9 @@ public class movieListActivity extends AppCompatActivity {
                 RecyclerView rView = recyclerView;
                 rView.setHasFixedSize(true);
                 rView.setLayoutManager(lLayout);
-
-                movieGeneralAdapter mMovieGeneralAdapter = new movieGeneralAdapter(getApplicationContext(), movieGeneralModals, mTwoPane);
+                FragmentManager fm = getSupportFragmentManager();
+                movieGeneralAdapter mMovieGeneralAdapter = new movieGeneralAdapter(getApplicationContext(), movieGeneralModals, mTwoPane, fm);
                 rView.setAdapter(mMovieGeneralAdapter);
-
             }
 
             @Override

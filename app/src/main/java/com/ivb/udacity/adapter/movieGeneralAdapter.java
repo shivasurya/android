@@ -1,9 +1,8 @@
 package com.ivb.udacity.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,11 +23,13 @@ public class movieGeneralAdapter extends RecyclerView.Adapter<movieGeneralHolder
     private List<movieGeneralModal> mMovieGeneralModal;
     private Context context;
     private boolean mTwoPane;
+    private FragmentManager fm;
 
-    public movieGeneralAdapter(Context context, List<movieGeneralModal> itemList, boolean mTwoPane) {
+    public movieGeneralAdapter(Context context, List<movieGeneralModal> itemList, boolean mTwoPane, FragmentManager fm) {
         this.mMovieGeneralModal = itemList;
         this.context = context;
         this.mTwoPane = mTwoPane;
+        this.fm = fm;
     }
 
     @Override
@@ -50,17 +51,15 @@ public class movieGeneralAdapter extends RecyclerView.Adapter<movieGeneralHolder
             @Override
             public void onClick(View v) {
                 if (mTwoPane) {
-                    Bundle arguments = new Bundle();
-                    arguments.putString(movieDetailFragment.ARG_ITEM_ID, "1");
                     movieDetailFragment fragment = new movieDetailFragment();
-                    fragment.setArguments(arguments);
-                    ((Activity) context).getFragmentManager().beginTransaction()
+                    fragment.setArgument(fm);
+                    fm
+                            .beginTransaction()
                             .replace(R.id.movie_detail_container, fragment)
                             .commit();
                 } else {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, movieDetailActivity.class);
-                    intent.putExtra(movieDetailFragment.ARG_ITEM_ID, "1");
                     context.startActivity(intent);
                 }
             }

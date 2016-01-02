@@ -111,7 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void FetchMovie() {
         MovieAPI mMovieAPI = NetworkAPI.createService(MovieAPI.class);
-        mMovieAPI.fetchMovies(FLAG_CURRENT, ACCESS_TOKEN, new Callback<movieGeneral>() {
+        mMovieAPI.fetchMovies(FLAG_CURRENT, ACCESS_TOKEN, "ta", new Callback<movieGeneral>() {
             @Override
             public void success(movieGeneral mMoviegeneral, Response response) {
                 // here you do stuff with returned tasks

@@ -16,6 +16,7 @@ public interface MovieAPI {
     void fetchMovies(
             @Query("sort_by") String mSort,
             @Query("api_key") String mApiKey,
+            @Query("language") String lang,
             Callback<movieGeneral> cb
     );
 
