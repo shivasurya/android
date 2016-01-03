@@ -1,9 +1,11 @@
 package com.ivb.udacity.modal;
 
+import java.io.Serializable;
+
 /**
  * Created by S.Shivasurya on 1/1/2016 - androidStudio.
  */
-public class movieGeneral {
+public class movieGeneral implements Serializable {
     private Results[] results;
 
     private String page;

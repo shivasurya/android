@@ -40,21 +40,21 @@ public class movieListActivity extends AppCompatActivity {
     final CharSequence[] items = {" Most Popular ", " Highest Rated ", " My Favourites "};
     private final String MOST_POPULAR = "popularity.desc";
     private final String HIGHLY_RATED = "vote_count.desc";
-    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    View recyclerView;
     private AlertDialog choice;
     private String FLAG_CURRENT = MOST_POPULAR;
-
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
      */
     private boolean mTwoPane;
+    private movieGeneral mMoviegeneralData;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
-        Log.d("oncreate", "oncreate");
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -65,30 +65,78 @@ public class movieListActivity extends AppCompatActivity {
             }
         });
 
-        View recyclerView = findViewById(R.id.movie_list);
+        recyclerView = findViewById(R.id.movie_list);
 
         assert recyclerView != null;
 
         if (findViewById(R.id.movie_detail_container) != null) {
-            //this is two pane mode
             mTwoPane = true;
         }
-
-        Log.i("check", String.valueOf(mTwoPane));
-        FetchMovie((RecyclerView) recyclerView);
+        if (savedInstanceState == null)
+            FetchMovie((RecyclerView) recyclerView);
+        else {
+            if (savedInstanceState.getSerializable("adapter") != null) {
+                mMoviegeneralData = (movieGeneral) savedInstanceState.getSerializable("adapter");
+                Log.i("serialize", "serialize");
+                drawLayout((RecyclerView) recyclerView, mMoviegeneralData);
+            } else {
+                Log.i("network", "network");
+                FetchMovie((RecyclerView) recyclerView);
+            }
+        }
 
     }
 
     protected void getPaneChanges() {
-        //this is two pane mode
         mTwoPane = findViewById(R.id.movie_detail_container) != null;
+    }
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 
     @Override
     public void onConfigurationChanged(Configuration newConfig) {
+
         super.onConfigurationChanged(newConfig);
         getPaneChanges();
-        Log.i("config", "changed");
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putSerializable("adapter", mMoviegeneralData);
+        Log.i("saved", "saved");
+
+    }
+
+    private void drawLayout(@NonNull final RecyclerView recyclerView, movieGeneral mMoviegeneral) {
+        List<movieGeneralModal> movieGeneralModals = new ArrayList<movieGeneralModal>();
+        Results[] mResult = mMoviegeneral.getResults();
+        for (Results result : mResult) {
+            movieGeneralModal obj = new movieGeneralModal(result.getTitle(), result.getPoster_path(), result.getVote_average());
+            movieGeneralModals.add(obj);
+        }
+        DisplayMetrics displaymetrics = new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
+        int width = displaymetrics.widthPixels;
+        int number;
+        if (!mTwoPane) {
+            number = width / 170;
+        } else {
+            number = (width / 2) / 170;
+        }
+        GridLayoutManager lLayout = new GridLayoutManager(getApplicationContext(), number);
+
+        RecyclerView rView = recyclerView;
+        rView.setHasFixedSize(true);
+        rView.setLayoutManager(lLayout);
+        FragmentManager fm = getSupportFragmentManager();
+        movieGeneralAdapter mMovieGeneralAdapter = new movieGeneralAdapter(getApplicationContext(), movieGeneralModals, mTwoPane, fm);
+        rView.setAdapter(mMovieGeneralAdapter);
+
     }
 
     private void FetchMovie(@NonNull final RecyclerView recyclerView) {
@@ -97,30 +145,8 @@ public class movieListActivity extends AppCompatActivity {
         mMovieAPI.fetchMovies(FLAG_CURRENT, ACCESS_TOKEN, "ta", new Callback<movieGeneral>() {
             @Override
             public void success(movieGeneral mMoviegeneral, Response response) {
-                // here you do stuff with returned tasks
-                List<movieGeneralModal> movieGeneralModals = new ArrayList<movieGeneralModal>();
-                Results[] mResult = mMoviegeneral.getResults();
-                for (Results result : mResult) {
-                    movieGeneralModal obj = new movieGeneralModal(result.getTitle(), result.getPoster_path(), result.getVote_average());
-                    movieGeneralModals.add(obj);
-                }
-                DisplayMetrics displaymetrics = new DisplayMetrics();
-                getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
-                int width = displaymetrics.widthPixels;
-                int number = 3;
-                if (!mTwoPane) {
-                    number = width / 170;
-                } else {
-                    number = (width / 2) / 170;
-                }
-                GridLayoutManager lLayout = new GridLayoutManager(getApplicationContext(), number);
-
-                RecyclerView rView = recyclerView;
-                rView.setHasFixedSize(true);
-                rView.setLayoutManager(lLayout);
-                FragmentManager fm = getSupportFragmentManager();
-                movieGeneralAdapter mMovieGeneralAdapter = new movieGeneralAdapter(getApplicationContext(), movieGeneralModals, mTwoPane, fm);
-                rView.setAdapter(mMovieGeneralAdapter);
+                mMoviegeneralData = mMoviegeneral;
+                drawLayout(recyclerView, mMoviegeneral);
             }
 
             @Override
