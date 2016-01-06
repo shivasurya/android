@@ -1,14 +1,238 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/movie_detail"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
+    android:background="#e7e7e7">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:id="@+id/movie_detail"
+    android:layout_width="match_parent"
+            android:layout_height="match_parent"
     android:orientation="vertical"
     android:textIsSelectable="true"
     tools:context="com.ivb.udacity.movieDetailFragment">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/youtubefragment"
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
-        android:layout_height="250sp" />
-</LinearLayout>
+                android:layout_height="150sp"
+                android:layout_margin="3sp"
+                card_view:cardCornerRadius="3sp"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="110sp"
+                        android:layout_height="match_parent"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/bg" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="10sp"
+                            android:fontFamily="sans-serif"
+                            android:maxLines="2"
+                            android:text="The Interstellar"
+                            android:textColor="@android:color/black"
+                            android:textSize="20sp" />
+
+                        <TextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="10sp"
+                            android:drawableLeft="@drawable/review"
+                            android:drawablePadding="5sp"
+                            android:text="7.89" />
+
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2sp"
+                            android:layout_marginLeft="5sp"
+                            android:layout_marginRight="1sp"
+                            android:layout_marginTop="40sp"
+                            android:background="#e7e7e7" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent">
+
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="match_parent"
+                                android:layout_marginLeft="5sp"
+                                android:drawableLeft="@drawable/calendar"
+                                android:drawablePadding="5sp"
+                                android:gravity="center_vertical"
+                                android:text="03-12-1995" />
+
+                            <TextView
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:layout_marginRight="5sp"
+                                android:drawablePadding="3sp"
+                                android:drawableRight="@drawable/groups"
+                                android:gravity="center_vertical|right"
+                                android:text="2,548" />
+                        </LinearLayout>
+                    </LinearLayout>
+                </LinearLayout>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3sp"
+                card_view:cardCornerRadius="3sp"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="5sp"
+                        android:text="Trailer"
+                        android:textSize="20sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2sp"
+                        android:layout_marginRight="1sp"
+                        android:background="#e7e7e7" />
+                </LinearLayout>
+
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:padding="5sp">
+
+                        <ImageView
+                            android:layout_width="180sp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3sp"
+                            android:src="@drawable/mqdefault" />
+
+                        <ImageView
+                            android:layout_width="180sp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3sp"
+                            android:src="@drawable/mqdefault" />
+
+                        <ImageView
+                            android:layout_width="180sp"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="3sp"
+                            android:src="@drawable/mqdefault" />
+                    </LinearLayout>
+                </HorizontalScrollView>
+
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3sp"
+                card_view:cardCornerRadius="3sp"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="5sp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Plot Synopsis"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2sp"
+                        android:layout_marginRight="1sp"
+                        android:layout_marginTop="3sp"
+                        android:background="#e7e7e7" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:fontFamily="sans-serif"
+                        android:text="Bounty hunters seek shelter from a raging blizzard and get caught up in a plot of betrayal and deception.Bounty hunters seek shelter from a raging blizzard and get caught up in a plot of betrayal and deception." />
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+            <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="3sp"
+                card_view:cardCornerRadius="3sp"
+                card_view:cardUseCompatPadding="true">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5sp"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Review"
+                        android:textColor="@android:color/black"
+                        android:textSize="20sp" />
+
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="2sp"
+                        android:layout_marginRight="1sp"
+                        android:layout_marginTop="3sp"
+                        android:background="#e7e7e7" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_margin="10sp"
+                        android:fontFamily="sans-serif"
+                        android:text="So where were you when the Science Fiction cinema sensation ‘Star Wars’ took shape and captured the imagination of the massive global moviegoers’ escapist expectations back in 1977? Regardless of whether you existed thirty-eight years ago or not, the legend of George Lucas’ highly-heralded SF blockbuster that shattered box office records worldwide was automatically engrained in your cinematic psyche. Now nearly four decades later, the motion picture phenomenon that took place in ‘a galaxy a long time ago…far, far away’ has come to expand its entertaining promise and prominence even after numerous servings of movie sequels, television specials and other fanfare attributes that promoted the ‘Star Wars’ agenda throughout the countless years.\r\n\r\nThe modern-day arrival of yet another ‘Star Wars’ edition in the millennium movie-making age of technical and tactical brilliance is quite fitting and filmmaker J.J. Abrams is the right choice to helm this sacred film franchise and present a whole new litany of continuing adventurous narratives for a new generation of ‘Star Wars’ personalities dipping their tenacious toes into ‘the force of goodness’ battling ‘the dark side’ of authoritative evil.\r\n\r\nIn Abrams’s reboot ‘Star Wars: The Force Awakens’, the anticipation of enhancing and enlightening the reputation and respect of the Lucas landscape of stormtroopers, light sabres and of course the iconic ‘Star Wars’ returnees from the treasured trio of Harrison Ford (Han Solo)/Carrie Fisher (Leia) and Mark Hamill (Luke Skywalker) registers with a nostalgic blast of appreciation and exhilaration. ‘The Force Awakens’ is a sheer big screen celebration of majestic impishness and intrigue that will fortify the hunger of both casual and rabid ‘Star Wars’ fanatics. Indeed, the hype is warranted and Abrams, the mastermind of the big-budget movie sequelitis, is in top form as he triumphantly presents ‘The Force Awakens’ on a prized silver platter designed for its surging golden moments of charged ebullience.\r\n\r\nIn looking at the numbers game that is connected to the overall ‘Star Wars’ universe, it is hard to believe that the last prequel was released just a decade ago. Furthermore, it is mind-boggling that the aforementioned ‘Star Wars’ ‘royalty’ in Ford, Fisher and Hamill have shared the same space on film for the first time in over three decades since they last were featured in a ‘Star Wars’ movie together. Nevertheless, no one can deny that ‘The Force Awakens’ does not take the challenge in combining the remembrance of the ‘Star Wars’ installments of yesteryear with the fresh brand of current upstarts willing to engage in another boisterous saga that begins a whole chapter of compelling wonderment. The mix of veterans and novices in ‘The Force Awakens’ is quite interesting but the familiarity of the storytelling heft of good vs. evil is always a solid sell in the realm of the ‘Star Wars’ utopia.\r\n\r\nThe good news is that ‘The Force Awakens’ not only serves as a bridge that crosses both boundaries past and present in ‘Star Wars’ folklore but it taps into the masterful mystique that Lucas and company worked so diligently to showcase so historically some thirty-eight years ago. Still, some may have lobbied for a stronger storyline in ‘The Force Awakens’ as they may gently dismiss it as being merely thin in its premise while viewing it primarily as a launching pad to develop yet another series of movies to create the ‘Star Wars’ juggernaut for this current-day climax of warped speed wizardry. For those that want a basic outline of ‘The Force Awakens’ pulse it is as such where the beloved yet aging tandem of standouts Han Solo and Chewbacca (yes, good old hulking and walking hairball Chewie is back) is helping out heroic new bloods’ Rey and Finn (played by Daisy Ridley and John Boyega)’ in an effort to groom them for combating the emergence of Kylo Ren (Adam Driver), a villainous representative from the Dark Side of the Force.  \r\n\r\nBasically, ‘The Force Awakens’ is a grand and stirring homage to the prolific Science Fiction/space fantasy that dared to soar its ambitious wings while taking the old-fashioned concept of the good guys sparring with the bad guys and spinning a whimsical web of dark imperialism while searching for the intrinsic value of brotherhood. One cannot imagine the vitality of ‘Star Wars’ without the inclusion of notable and favorite characterizations that were instrumental in inviting a ravenous response to this filming phenom that has existed in your pop cultural lives for too many years to recount. In addition to joining top dogs in Ford’s Han Solo, Hamill’s Luke Skywalker, Fisher’s General Leia Organa (the former Princess Leia to all you old school ‘Star Wars’ enthusiasts out there) and Peter Mayhew’s Chewbacca, there is the welcomed presence of C3-PO (Anthony Daniels) as well. As for C3-PO’s newest sidekick BB-8, a mechanical rolling ball robot, he is the R2-D2 replacement that should easily win the heart of the kiddies looking for a cute contraption of a companion to treasure on the spot. It should be pointed out that ‘The Force Awakens’ is set 30 years from the last installment and thankfully this update has not lost a magical step since that time.\r\n\r\nAnyhow, the First Order’s solar system mechanism needs to be destroyed and must be eradicated by the young talents in spunky and pretty Rey (think the athletic female version of Luke Skywalker) as she teams up with former stormtrooper Finn, a warrior with an uncharacteristic compassion for not killing any designated weak soul as instructed. Naturally, this duo (while under the tutelage of the mature and ragged-looking Han Solo) has their hands full as they clash with the nefarious General Hux (Domhnall Gleeson from ‘Brooklyn’) and his Special Forces protégé Kylo Ren that strikes an immediate comparison to ‘Star Wars’ most notorious bad boy in the deliciously ruthless Darth Vader.\r\n\r\nDaisy Ridley's Rey and John Boyega's Finn are having a blast as the touted twosome out to save the day in J.J. Abram's celebrated STAR WARS reboot THE FORCE AWAKENS\r\nDaisy Ridley’s Rey and John Boyega’s Finn are having a blast as the touted twosome out to save the day in J.J. Abram’s celebrated STAR WARS reboot THE FORCE AWAKENS\r\nThankfully, the majority of the audience may recall similar elements in ‘The Force Awakens’ that was touched upon in ‘Star Wars’ editions such as ‘A New Hope’ and ‘Return Of The Jedi’ where the same structure and theme of the plot points are somewhat revisited. As charming and stimulating as ‘The Force Awakens’ appears in its glorious presentation of being a beautifully shot and visually vibrant popcorn piece, the real find in Abrams’ spectacular space-aged spectacle is Ridley’s heroine Rey, whose emotional and physical commitment to this futuristic fable feels grounded in genuine suspense and praise. Ridley has legitimate game and carries this hot and heavy galactic actioner on her sturdy shoulders with the overwhelming pressure of headlining a cinema giant looking the re-enter the consciousness of rabid ‘Star Wars’ aficionados everywhere. Clearly, we are invested in Ridley’s Rey whose feistiness never undercuts her feminine convictions or courageousness. She runs circles around her male co-stars in fellow ‘Star Wars’ newbies Boyega/Finn and Driver/Kylo Ren and her sense of empowerment is what drives the authentic Force behind Abrams’ inherited ‘Star Wars’ workload.\r\n\r\n‘Star Wars: The Force Awakens’ gleefully ignites the flashy flames of giddiness that we all associate with George Lucas’ indomitable big screen creation. The signature flourishes from composure John Williams’ commanding musical score to the stunning and innovative technical tweaking to the mixture of the old and new guard in front of the camera all make for an eventful and exciting return to the universal staging for a movie-making moment that will stand the test of time, the immense pop cultural movement at the movies known as ‘Star Wars’.\r\n\r\nStar Wars: The Force Awakens (2015)\r\n\r\nLucasfilms\r\n\r\n2 hrs. 15 mins.\r\n\r\nStarring: Harrison Ford, Daisy Ridley, Carrie Fisher, John Boyega, Oscar Isaac, Adam Driver, Peter Mayhew, Domhnall Gleeson, Lupita Nyong’o, Andy Serkis, Gwendoline Christie, Kenny Baker, Anthony Daniels  and Max von Sydow\r\n\r\nDirected and Co-Written by: J.J. Abrams\r\n\r\nMPAA Rating: PG-13\r\n\r\nGenre: Science Fiction/Action and Adventure/Space Fantasy\r\n\r\nCritic’s rating: *** stars (out of 4 stars)\r\n\r\n(c) Frank Ochieng 2015" />
+
+                </LinearLayout>
+            </android.support.v7.widget.CardView>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|end"
+        android:layout_margin="@dimen/fab_margin"
+        android:src="@android:drawable/ic_menu_share" />
+
+</android.support.design.widget.CoordinatorLayout>
