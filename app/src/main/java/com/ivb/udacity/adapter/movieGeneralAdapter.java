@@ -40,7 +40,7 @@ public class movieGeneralAdapter extends RecyclerView.Adapter<movieGeneralHolder
     }
 
     @Override
-    public void onBindViewHolder(movieGeneralHolder holder, int position) {
+    public void onBindViewHolder(movieGeneralHolder holder, final int position) {
         holder.movieName.setText(mMovieGeneralModal.get(position).getTitle());
         holder.movieAvg.setText(mMovieGeneralModal.get(position).getmVote());
         //picasso loading here
@@ -52,6 +52,7 @@ public class movieGeneralAdapter extends RecyclerView.Adapter<movieGeneralHolder
             public void onClick(View v) {
                 if (mTwoPane) {
                     movieDetailFragment fragment = new movieDetailFragment();
+                    fragment.setMovieData(mMovieGeneralModal.get(position));
                     fragment.setArgument(fm);
                     fm
                             .beginTransaction()
@@ -60,6 +61,7 @@ public class movieGeneralAdapter extends RecyclerView.Adapter<movieGeneralHolder
                 } else {
                     Context context = v.getContext();
                     Intent intent = new Intent(context, movieDetailActivity.class);
+                    intent.putExtra("DATA_MOVIE", mMovieGeneralModal.get(position));
                     context.startActivity(intent);
                 }
             }

@@ -1,10 +1,9 @@
 package com.ivb.udacity;
 
+import android.content.DialogInterface;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
-import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -12,6 +11,9 @@ import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 
 import com.ivb.udacity.adapter.movieGeneralAdapter;
@@ -40,7 +42,7 @@ public class movieListActivity extends AppCompatActivity {
     final CharSequence[] items = {" Most Popular ", " Highest Rated ", " My Favourites "};
     private final String MOST_POPULAR = "popularity.desc";
     private final String HIGHLY_RATED = "vote_count.desc";
-    private final String ACCESS_TOKEN = "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX";
+    private final String ACCESS_TOKEN = "X";
     View recyclerView;
     private AlertDialog choice;
     private String FLAG_CURRENT = MOST_POPULAR;
@@ -56,14 +58,6 @@ public class movieListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_movie_list);
 
-        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         recyclerView = findViewById(R.id.movie_list);
 
@@ -73,19 +67,56 @@ public class movieListActivity extends AppCompatActivity {
             mTwoPane = true;
         }
         if (savedInstanceState == null)
-            FetchMovie((RecyclerView) recyclerView);
+            FetchMovie((RecyclerView) recyclerView, FLAG_CURRENT);
         else {
             if (savedInstanceState.getSerializable("adapter") != null) {
                 mMoviegeneralData = (movieGeneral) savedInstanceState.getSerializable("adapter");
-                Log.i("serialize", "serialize");
                 drawLayout((RecyclerView) recyclerView, mMoviegeneralData);
             } else {
-                Log.i("network", "network");
-                FetchMovie((RecyclerView) recyclerView);
+                FetchMovie((RecyclerView) recyclerView, FLAG_CURRENT);
             }
         }
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.mapMenu:
+                showChoices();
+                break;
+        }
+        return true;
+    }
+
+    private void showChoices() {
+
+        choice = new AlertDialog.Builder(this)
+                .setSingleChoiceItems(items, -1, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int item) {
+                        switch (item) {
+                            case 0:
+                                FetchMovie((RecyclerView) recyclerView, MOST_POPULAR);
+                                break;
+                            case 1:
+                                FetchMovie((RecyclerView) recyclerView, HIGHLY_RATED);
+                                break;
+                            case 2:
+                                break;
+                        }
+                        choice.dismiss();
+                    }
+                }).setTitle("Choose")
+                .show();
+    }
+
 
     protected void getPaneChanges() {
         mTwoPane = findViewById(R.id.movie_detail_container) != null;
@@ -108,7 +139,6 @@ public class movieListActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("adapter", mMoviegeneralData);
-        Log.i("saved", "saved");
 
     }
 
@@ -116,8 +146,12 @@ public class movieListActivity extends AppCompatActivity {
         List<movieGeneralModal> movieGeneralModals = new ArrayList<movieGeneralModal>();
         Results[] mResult = mMoviegeneral.getResults();
         for (Results result : mResult) {
-            movieGeneralModal obj = new movieGeneralModal(result.getTitle(), result.getPoster_path(), result.getVote_average());
+            movieGeneralModal obj = new movieGeneralModal(result.getTitle(), result.getPoster_path(), result.getVote_average()
+                    , result.getId(), result.getVote_count(), result.getRelease_date(), result.getOverview());
             movieGeneralModals.add(obj);
+            Log.d("value", result.getId());
+            Log.d("value", String.valueOf(result.getOverview().length()));
+
         }
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
@@ -139,8 +173,8 @@ public class movieListActivity extends AppCompatActivity {
 
     }
 
-    private void FetchMovie(@NonNull final RecyclerView recyclerView) {
-        Log.i("log", String.valueOf(mTwoPane));
+    private void FetchMovie(@NonNull final RecyclerView recyclerView, String temp) {
+        FLAG_CURRENT = temp;
         MovieAPI mMovieAPI = NetworkAPI.createService(MovieAPI.class);
         mMovieAPI.fetchMovies(FLAG_CURRENT, ACCESS_TOKEN, "ta", new Callback<movieGeneral>() {
             @Override

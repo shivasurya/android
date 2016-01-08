@@ -1,9 +1,11 @@
 package com.ivb.udacity.network;
 
 import com.ivb.udacity.modal.movieGeneral;
+import com.ivb.udacity.modal.review.movieReview;
 
 import retrofit.Callback;
 import retrofit.http.GET;
+import retrofit.http.Path;
 import retrofit.http.Query;
 
 /**
@@ -18,6 +20,13 @@ public interface MovieAPI {
             @Query("api_key") String mApiKey,
             @Query("language") String lang,
             Callback<movieGeneral> cb
+    );
+
+    @GET("/3/movie/{id}/reviews")
+    void fetchReview(
+            @Query("api_key") String mApiKey,
+            @Path("id") String id,
+            Callback<movieReview> cb
     );
 
 }
