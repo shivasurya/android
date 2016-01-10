@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#e7e7e7">
+    android:background="@color/bgcolor">
 
     <ScrollView
         android:layout_width="match_parent"
@@ -10,14 +10,14 @@
 
         <LinearLayout
             android:id="@+id/movie_detail"
-    android:layout_width="match_parent"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:textIsSelectable="true"
-    tools:context="com.ivb.udacity.movieDetailFragment">
+            android:orientation="vertical"
+            android:textIsSelectable="true"
+            tools:context="com.ivb.udacity.movieDetailFragment">
 
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
+                android:layout_width="match_parent"
                 android:layout_height="150sp"
                 android:layout_margin="3sp"
                 card_view:cardCornerRadius="3sp"
@@ -45,6 +45,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_margin="10sp"
+                            android:ellipsize="end"
                             android:fontFamily="sans-serif"
                             android:maxLines="1"
                             android:textColor="@android:color/black"
@@ -52,12 +53,11 @@
 
                         <TextView
                             android:id="@+id/rating"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10sp"
                             android:drawableLeft="@drawable/review"
                             android:drawablePadding="5sp" />
-
                         <View
                             android:layout_width="match_parent"
                             android:layout_height="2sp"
@@ -100,18 +100,24 @@
                 card_view:cardCornerRadius="3sp"
                 card_view:cardUseCompatPadding="true">
 
+                <RelativeLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
 
                     <TextView
-                        android:layout_width="match_parent"
+                        android:id="@+id/youtubeshare"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_margin="5sp"
+                        android:clickable="true"
+                        android:drawableTint="@android:color/black"
                         android:text="Trailer"
+                        android:textColor="@android:color/black"
                         android:textSize="20sp" />
-
                     <View
                         android:layout_width="match_parent"
                         android:layout_height="2sp"
@@ -120,35 +126,43 @@
                 </LinearLayout>
 
                 <HorizontalScrollView
+                    android:id="@+id/youtubeholder"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="150sp"
+                    android:layout_marginTop="10sp">
+
+                    <LinearLayout
+                        android:id="@+id/youtubelayout"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal">
+
+                    </LinearLayout>
+                </HorizontalScrollView>
 
                     <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:padding="5sp">
+                        android:layout_below="@+id/youtubeholder"
+                        android:orientation="vertical">
 
-                        <ImageView
-                            android:layout_width="180sp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="3sp"
-                            android:src="@drawable/mqdefault" />
+                        <View
+                            android:layout_width="match_parent"
+                            android:layout_height="2sp"
+                            android:layout_marginRight="1sp"
+                            android:background="#e7e7e7" />
 
-                        <ImageView
-                            android:layout_width="180sp"
+                        <TextView
+                            android:id="@+id/youtubesharer"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_margin="3sp"
-                            android:src="@drawable/mqdefault" />
+                            android:padding="5sp"
+                            android:text="SHARE"
+                            android:textColor="@color/grey"
+                            android:textSize="15sp" />
 
-                        <ImageView
-                            android:layout_width="180sp"
-                            android:layout_height="wrap_content"
-                            android:layout_margin="3sp"
-                            android:src="@drawable/mqdefault" />
                     </LinearLayout>
-                </HorizontalScrollView>
-
+                </RelativeLayout>
             </android.support.v7.widget.CardView>
 
             <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"

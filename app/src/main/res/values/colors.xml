@@ -14,5 +14,5 @@
     <color name="spotify">#00C853</color>
     <color name="grey">#455A64</color>
     <color name="white">#fff</color>
-
+    <color name="bgcolor">#e7e7e7</color>
 </resources>

@@ -1,7 +1,5 @@
 package com.ivb.udacity.modal.review;
 
-import com.ivb.udacity.modal.Results;
-
 /**
  * Created by S.Shivasurya on 1/8/2016 - androidStudio.
  */

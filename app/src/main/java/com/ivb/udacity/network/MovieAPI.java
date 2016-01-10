@@ -2,6 +2,7 @@ package com.ivb.udacity.network;
 
 import com.ivb.udacity.modal.movieGeneral;
 import com.ivb.udacity.modal.review.movieReview;
+import com.ivb.udacity.modal.trailer.movieYoutubeModal;
 
 import retrofit.Callback;
 import retrofit.http.GET;
@@ -27,6 +28,13 @@ public interface MovieAPI {
             @Query("api_key") String mApiKey,
             @Path("id") String id,
             Callback<movieReview> cb
+    );
+
+    @GET("/3/movie/{id}/videos")
+    void fetchVideos(
+            @Query("api_key") String mApiKey,
+            @Path("id") String id,
+            Callback<movieYoutubeModal> cb
     );
 
 }

@@ -10,9 +10,7 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
 
-        </activity>
         <activity
             android:name=".movieDetailActivity"
             android:theme="@style/AppTheme">

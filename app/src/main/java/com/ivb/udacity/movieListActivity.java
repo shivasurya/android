@@ -15,8 +15,11 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.ivb.udacity.adapter.movieGeneralAdapter;
+import com.ivb.udacity.constants.constant;
 import com.ivb.udacity.modal.Results;
 import com.ivb.udacity.modal.movieGeneral;
 import com.ivb.udacity.modal.movieGeneralModal;
@@ -42,10 +45,11 @@ public class movieListActivity extends AppCompatActivity {
     final CharSequence[] items = {" Most Popular ", " Highest Rated ", " My Favourites "};
     private final String MOST_POPULAR = "popularity.desc";
     private final String HIGHLY_RATED = "vote_count.desc";
-    private final String ACCESS_TOKEN = "X";
     View recyclerView;
     private AlertDialog choice;
     private String FLAG_CURRENT = MOST_POPULAR;
+    private TextView errorTextView;
+    private ImageView errorImageview;
     /**
      * Whether or not the activity is in two-pane mode, i.e. running on a tablet
      * device.
@@ -60,6 +64,8 @@ public class movieListActivity extends AppCompatActivity {
 
 
         recyclerView = findViewById(R.id.movie_list);
+        errorImageview = (ImageView) findViewById(R.id.errimg);
+        errorTextView = (TextView) findViewById(R.id.errtext);
 
         assert recyclerView != null;
 
@@ -174,9 +180,12 @@ public class movieListActivity extends AppCompatActivity {
     }
 
     private void FetchMovie(@NonNull final RecyclerView recyclerView, String temp) {
+
+        errorImageview.setVisibility(View.INVISIBLE);
+        errorTextView.setVisibility(View.INVISIBLE);
         FLAG_CURRENT = temp;
         MovieAPI mMovieAPI = NetworkAPI.createService(MovieAPI.class);
-        mMovieAPI.fetchMovies(FLAG_CURRENT, ACCESS_TOKEN, "ta", new Callback<movieGeneral>() {
+        mMovieAPI.fetchMovies(FLAG_CURRENT, constant.ACCESS_TOKEN, "en", new Callback<movieGeneral>() {
             @Override
             public void success(movieGeneral mMoviegeneral, Response response) {
                 mMoviegeneralData = mMoviegeneral;
@@ -185,8 +194,8 @@ public class movieListActivity extends AppCompatActivity {
 
             @Override
             public void failure(RetrofitError error) {
-                // you should handle errors, too
-                Log.d("error", error.getMessage());
+                errorImageview.setVisibility(View.VISIBLE);
+                errorTextView.setVisibility(View.VISIBLE);
             }
         });
 
