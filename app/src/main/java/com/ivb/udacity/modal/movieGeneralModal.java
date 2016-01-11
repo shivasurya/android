@@ -13,6 +13,7 @@ public class movieGeneralModal implements Serializable {
     String mPeople;
     String mReleaseDate;
     String mOverview;
+    String mReview;
 
     public movieGeneralModal(String mTitle, String mThumbnail, String mVote, String mId, String mPeople, String mReleaseDate, String mOverview) {
         this.mThumbnail = mThumbnail;
@@ -22,7 +23,14 @@ public class movieGeneralModal implements Serializable {
         this.mPeople = mPeople;
         this.mReleaseDate = mReleaseDate;
         this.mOverview = mOverview;
+    }
 
+    public String getmReview() {
+        return this.mReview;
+    }
+
+    public void setmReview(String mReview) {
+        this.mReview = mReview;
     }
 
     public String getmOverview() {

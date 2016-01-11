@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.util.Log;
@@ -17,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.ivb.udacity.constants.constant;
+import com.ivb.udacity.database.favouritesSqliteHelper;
 import com.ivb.udacity.modal.movieGeneralModal;
 import com.ivb.udacity.modal.review.Results;
 import com.ivb.udacity.modal.review.movieReview;
@@ -44,6 +46,7 @@ public class movieDetailFragment extends Fragment {
     private LinearLayout youtubeViewHolder;
     private TextView shareYoutube;
     private String shareYoutubeID;
+    private FloatingActionButton fab;
 
     public movieDetailFragment() {
 
@@ -94,6 +97,7 @@ public class movieDetailFragment extends Fragment {
         reviewText = (TextView) v.findViewById(R.id.reviewText);
         youtubeViewHolder = (LinearLayout) v.findViewById(R.id.youtubelayout);
         shareYoutube = (TextView) v.findViewById(R.id.youtubesharer);
+        fab = (FloatingActionButton) v.findViewById(R.id.fab);
 
         titleText.setText(moviegeneralModal.getTitle());
         voteText.setText(moviegeneralModal.getmVote());
@@ -116,8 +120,25 @@ public class movieDetailFragment extends Fragment {
                 }
             }
         });
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                saveToDatabase();
+            }
+        });
     }
 
+    protected void saveToDatabase() {
+        favouritesSqliteHelper db = new favouritesSqliteHelper(getContext());
+        if (!reviewText.getText().toString().contains("Sorry")) {
+            moviegeneralModal.setmReview(reviewText.getText().toString());
+        }
+        boolean b = db.insertMovie(moviegeneralModal);
+        if (b)
+            Toast.makeText(getContext(), "Added to Favourites", Toast.LENGTH_LONG).show();
+        else
+            Toast.makeText(getContext(), "Seems Already in Favourites!", Toast.LENGTH_LONG).show();
+    }
     protected void shareYoutubeIntent(String shareYoutubeID) {
         String url = "http://www.youtube.com/watch?v" + shareYoutubeID;
         String shareMsg = "hey,there new film named " + moviegeneralModal.getTitle() + " has been released and here is the Trailer link,Have a look at it " + url;

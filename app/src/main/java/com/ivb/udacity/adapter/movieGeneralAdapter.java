@@ -47,6 +47,15 @@ public class movieGeneralAdapter extends RecyclerView.Adapter<movieGeneralHolder
         Picasso.with(context)
                 .load(mMovieGeneralModal.get(position).getThumbnail())
                 .into(holder.moviePhoto);
+        if (position == 0 && mTwoPane) {
+            movieDetailFragment fragment = new movieDetailFragment();
+            fragment.setMovieData(mMovieGeneralModal.get(0));
+            fragment.setArgument(fm);
+            fm
+                    .beginTransaction()
+                    .replace(R.id.movie_detail_container, fragment)
+                    .commit();
+        }
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

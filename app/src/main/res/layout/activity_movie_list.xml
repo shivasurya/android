@@ -38,7 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|center_vertical"
             android:layout_marginTop="50sp"
-            android:text="Bad Luck!Network Error"
+            android:text="@string/badluck"
             android:visibility="invisible" />
     </FrameLayout>
 

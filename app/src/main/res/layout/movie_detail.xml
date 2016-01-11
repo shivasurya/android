@@ -11,7 +11,7 @@
         <LinearLayout
             android:id="@+id/movie_detail"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical"
             android:textIsSelectable="true"
             tools:context="com.ivb.udacity.movieDetailFragment">
@@ -115,7 +115,7 @@
                         android:layout_margin="5sp"
                         android:clickable="true"
                         android:drawableTint="@android:color/black"
-                        android:text="Trailer"
+                        android:text="@string/trailer"
                         android:textColor="@android:color/black"
                         android:textSize="20sp" />
                     <View
@@ -128,7 +128,7 @@
                 <HorizontalScrollView
                     android:id="@+id/youtubeholder"
                     android:layout_width="match_parent"
-                    android:layout_height="150sp"
+                    android:layout_height="120sp"
                     android:layout_marginTop="10sp">
 
                     <LinearLayout
@@ -157,7 +157,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:padding="5sp"
-                            android:text="SHARE"
+                            android:text="@string/share"
                             android:textColor="@color/grey"
                             android:textSize="15sp" />
 
@@ -181,7 +181,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Plot Synopsis"
+                        android:text="@string/plot"
                         android:textColor="@android:color/black"
                         android:textSize="20sp" />
 
@@ -217,7 +217,7 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Review"
+                        android:text="@string/review"
                         android:textColor="@android:color/black"
                         android:textSize="20sp" />
 

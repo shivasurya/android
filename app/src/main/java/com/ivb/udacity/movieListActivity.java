@@ -10,16 +10,17 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.ivb.udacity.adapter.movieGeneralAdapter;
 import com.ivb.udacity.constants.constant;
+import com.ivb.udacity.database.favouritesSqliteHelper;
 import com.ivb.udacity.modal.Results;
 import com.ivb.udacity.modal.movieGeneral;
 import com.ivb.udacity.modal.movieGeneralModal;
@@ -48,6 +49,7 @@ public class movieListActivity extends AppCompatActivity {
     View recyclerView;
     private AlertDialog choice;
     private String FLAG_CURRENT = MOST_POPULAR;
+    private String FLAG_FAV = "FAVOURITE";
     private TextView errorTextView;
     private ImageView errorImageview;
     /**
@@ -75,7 +77,9 @@ public class movieListActivity extends AppCompatActivity {
         if (savedInstanceState == null)
             FetchMovie((RecyclerView) recyclerView, FLAG_CURRENT);
         else {
-            if (savedInstanceState.getSerializable("adapter") != null) {
+            if (savedInstanceState.getString("CURRENT") == FLAG_FAV) {
+                FetchMovie((RecyclerView) recyclerView, FLAG_FAV);
+            } else if (savedInstanceState.getSerializable("adapter") != null) {
                 mMoviegeneralData = (movieGeneral) savedInstanceState.getSerializable("adapter");
                 drawLayout((RecyclerView) recyclerView, mMoviegeneralData);
             } else {
@@ -115,6 +119,7 @@ public class movieListActivity extends AppCompatActivity {
                                 FetchMovie((RecyclerView) recyclerView, HIGHLY_RATED);
                                 break;
                             case 2:
+                                FetchMovie((RecyclerView) recyclerView, FLAG_FAV);
                                 break;
                         }
                         choice.dismiss();
@@ -123,6 +128,15 @@ public class movieListActivity extends AppCompatActivity {
                 .show();
     }
 
+    protected void FetchFavourites(@NonNull final RecyclerView recyclerView) {
+        favouritesSqliteHelper db = new favouritesSqliteHelper(getApplicationContext());
+        List<movieGeneralModal> movieGeneralModals = db.getAllMovies();
+        if (movieGeneralModals.size() > 0)
+            attachAdapter(recyclerView, movieGeneralModals);
+        else {
+            Toast.makeText(getApplicationContext(), "It seems No Favourites! check back Later", Toast.LENGTH_LONG).show();
+        }
+    }
 
     protected void getPaneChanges() {
         mTwoPane = findViewById(R.id.movie_detail_container) != null;
@@ -145,20 +159,11 @@ public class movieListActivity extends AppCompatActivity {
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putSerializable("adapter", mMoviegeneralData);
+        outState.putString("CURRENT", FLAG_CURRENT);
 
     }
 
-    private void drawLayout(@NonNull final RecyclerView recyclerView, movieGeneral mMoviegeneral) {
-        List<movieGeneralModal> movieGeneralModals = new ArrayList<movieGeneralModal>();
-        Results[] mResult = mMoviegeneral.getResults();
-        for (Results result : mResult) {
-            movieGeneralModal obj = new movieGeneralModal(result.getTitle(), result.getPoster_path(), result.getVote_average()
-                    , result.getId(), result.getVote_count(), result.getRelease_date(), result.getOverview());
-            movieGeneralModals.add(obj);
-            Log.d("value", result.getId());
-            Log.d("value", String.valueOf(result.getOverview().length()));
-
-        }
+    private void attachAdapter(@NonNull final RecyclerView recyclerView, List<movieGeneralModal> movieGeneralModals) {
         DisplayMetrics displaymetrics = new DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(displaymetrics);
         int width = displaymetrics.widthPixels;
@@ -169,7 +174,6 @@ public class movieListActivity extends AppCompatActivity {
             number = (width / 2) / 170;
         }
         GridLayoutManager lLayout = new GridLayoutManager(getApplicationContext(), number);
-
         RecyclerView rView = recyclerView;
         rView.setHasFixedSize(true);
         rView.setLayoutManager(lLayout);
@@ -179,26 +183,47 @@ public class movieListActivity extends AppCompatActivity {
 
     }
 
+    private void drawLayout(@NonNull final RecyclerView recyclerView, movieGeneral mMoviegeneral) {
+        List<movieGeneralModal> movieGeneralModals = new ArrayList<movieGeneralModal>();
+        Results[] mResult = mMoviegeneral.getResults();
+        for (Results result : mResult) {
+            movieGeneralModal obj = new movieGeneralModal(result.getTitle(), result.getPoster_path(), result.getVote_average()
+                    , result.getId(), result.getVote_count(), result.getRelease_date(), result.getOverview());
+            movieGeneralModals.add(obj);
+        }
+        if (mResult.length > 0) {
+            attachAdapter(recyclerView, movieGeneralModals);
+        } else {
+            errorImageview.setVisibility(View.VISIBLE);
+            errorTextView.setVisibility(View.VISIBLE);
+        }
+    }
+
     private void FetchMovie(@NonNull final RecyclerView recyclerView, String temp) {
 
         errorImageview.setVisibility(View.INVISIBLE);
         errorTextView.setVisibility(View.INVISIBLE);
+        errorTextView.setText("Sorry!Network Error! check back Later");
+
         FLAG_CURRENT = temp;
-        MovieAPI mMovieAPI = NetworkAPI.createService(MovieAPI.class);
-        mMovieAPI.fetchMovies(FLAG_CURRENT, constant.ACCESS_TOKEN, "en", new Callback<movieGeneral>() {
-            @Override
-            public void success(movieGeneral mMoviegeneral, Response response) {
-                mMoviegeneralData = mMoviegeneral;
-                drawLayout(recyclerView, mMoviegeneral);
-            }
+        if (FLAG_CURRENT != FLAG_FAV) {
+            MovieAPI mMovieAPI = NetworkAPI.createService(MovieAPI.class);
+            mMovieAPI.fetchMovies(FLAG_CURRENT, constant.ACCESS_TOKEN, "en", new Callback<movieGeneral>() {
+                @Override
+                public void success(movieGeneral mMoviegeneral, Response response) {
+                    mMoviegeneralData = mMoviegeneral;
+                    drawLayout(recyclerView, mMoviegeneral);
+                }
 
-            @Override
-            public void failure(RetrofitError error) {
-                errorImageview.setVisibility(View.VISIBLE);
-                errorTextView.setVisibility(View.VISIBLE);
-            }
-        });
-
+                @Override
+                public void failure(RetrofitError error) {
+                    errorImageview.setVisibility(View.VISIBLE);
+                    errorTextView.setVisibility(View.VISIBLE);
+                }
+            });
+        } else {
+            FetchFavourites(recyclerView);
+        }
     }
 
 
